@@ -1,0 +1,24 @@
+button {
+    background-color: #eee;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 11px;
+    padding: 6px 10px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: pointer;
+    position: absolute;
+    right: 16px;
+}
+button:hover {
+    background-color: #ddd;
+    border-color: #ccc
+}
+button:active {
+    background-color: #ccc;
+}
+button:focus {
+    outline:0;
+}

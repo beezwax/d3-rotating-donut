@@ -1,0 +1,22 @@
+{
+  "name": "rotating-donut",
+  "version": "1.0.0",
+  "description": "### Goal Reduce coupling between chart components and delegate responsibility.  Build modules based on [Mike Bostock's example](https://bost.ocks.org/mike/chart/)",
+  "main": "app.js",
+  "dependencies": {
+    "d3": "^4.10.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/beezwax/d3-rotating-donut.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/beezwax/d3-rotating-donut"
+  },
+  "homepage": "https://github.com/beezwax/d3-rotating-donut"
+}
