@@ -5,6 +5,7 @@ APP.rotatingDonut = function() {
       local;
 
   o = {
+    animationDuration: 600,
     thickness: 0.4,
     value: null,
     color: null,
@@ -14,24 +15,36 @@ APP.rotatingDonut = function() {
 
   local = {
     label: d3.local(),
+    animate: d3.local(),
     dimensions: d3.local()
   };
 
   function donut(group) {
-    group.each(render);
+    group.each(function(data) {
+      render.call(this, data, group);
+    });
   }
 
-  function render(data) {
+  function render(data, group) {
     var context,
+        t,
         dim,
         pie,
         arc,
+        pieTransition,
         segments,
         segmentEnter;
 
     if (!data) {return;}
 
     context = d3.select(this);
+
+    if (group instanceof d3.transition) {
+      t = d3.transition(group);
+    } else {
+      t = d3.transition().duration(o.animationDuration);
+    }
+
     dim = getDimensions(context);
 
     pie = d3.pie()
@@ -41,6 +54,8 @@ APP.rotatingDonut = function() {
     arc = d3.arc()
         .outerRadius(dim.outerRadius)
         .innerRadius(dim.innerRadius);
+
+    pieTransition = local.animate.get(this) || local.animate.set(this, APP.pieTransition());
 
     context.selectAll('svg')
         .data([pie(data.sort(o.sort))])
@@ -54,6 +69,7 @@ APP.rotatingDonut = function() {
         .attr('dominant-baseline', 'middle');
 
     context.selectAll('svg')
+        .transition(t)
         .attr('width', dim.width)
         .attr('height', dim.height)
         .selectAll('g.group')
@@ -72,11 +88,23 @@ APP.rotatingDonut = function() {
         .attr('class', 'segment')
         .attr('fill', dataAccess('color'));
 
+    pieTransition
+        .arc(arc)
+        .sort(o.sort)
+        .enteringSegments(segmentEnter)
+        .transitioningSegments(segments);
+
     segmentEnter
-        .merge(segments)
-        .attr('d', arc);
+        .transition(t)
+        .call(pieTransition.enter);
+
+    segments
+        .transition(t)
+        .call(pieTransition.transition);
 
     segments.exit()
+        .transition(t)
+        .call(pieTransition.exit)
         .remove();
   }
 
@@ -101,6 +129,11 @@ APP.rotatingDonut = function() {
     };
   }
 
+  donut.animationDuration = function(_) {
+    if (!arguments.length) {return o.animationDuration;}
+    o.animationDuration = _;
+    return donut;
+  };
   donut.thickness = function(_) {
     if (!arguments.length) {return o.thickness;}
     o.thickness = _;

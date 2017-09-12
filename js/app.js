@@ -16,11 +16,15 @@ document.addEventListener('DOMContentLoaded', function() {
     d3.select('#donut1')
         .datum(APP.generateData())
         .call(donut.label, 'Smith')
+        .transition()
+        .duration(0)
         .call(donut);
 
     d3.select('#donut2')
         .datum(APP.generateData())
         .call(donut.label, 'Jones')
+        .transition()
+        .duration(0)
         .call(donut);
   }
 
@@ -33,10 +37,15 @@ document.addEventListener('DOMContentLoaded', function() {
     dataButtonClick: function() {
       d3.select('#donut1')
           .datum(APP.generateData(true))
+          .transition()
+          .duration(600)
           .call(donut);
 
       d3.select('#donut2')
           .datum(APP.generateData(true))
+          .transition()
+          .delay(400)
+          .duration(200)
           .call(donut);
     },
 
@@ -47,6 +56,8 @@ document.addEventListener('DOMContentLoaded', function() {
       d3.selectAll(target)
           .call(donut.dimensions, {width: value, height: value})
           .call(donut)
+          .transition()
+          .duration(donut.animationDuration())
           .style('width', value + 'px')
           .style('height', value + 'px');
     }
