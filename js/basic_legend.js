@@ -22,11 +22,7 @@ APP.basicLegend = function () {
         labels,
         labelsEnter;
 
-    if (group instanceof d3.transition) {
-      t = d3.transition(group);
-    } else {
-      t = d3.transition();
-    }
+    t = APP.reuseTransition(group);
 
     context
         .selectAll('ul')
@@ -107,37 +103,11 @@ APP.basicLegend = function () {
     return selectedItem.get(this) && o.key(d) === o.key(selectedItem.get(this));
   }
 
-  legend.label = function(_) {
-    if (!arguments.length) {return o.label;}
-    o.label = _;
-    return legend;
-  };
-  legend.key = function(_) {
-    if (!arguments.length) {return o.key;}
-    o.key = _;
-    return legend;
-  };
-  legend.color = function(_) {
-    if (!arguments.length) {return o.color;}
-    o.color = _;
-    return legend;
-  };
-
-  legend.selectedItem = function(context, _) {
-    var returnArray;
-    if (typeof _ === 'undefined' ) {
-      returnArray = context.nodes()
-          .map(function (node) {return selectedItem.get(node);});
-      return context._groups[0] instanceof NodeList ? returnArray : returnArray[0];
-    }
-    context.each(function() {selectedItem.set(this, _);});
-    return legend;
-  };
-
-  legend.on = function(evt, callback) {
-    events.on(evt, callback);
-    return legend;
-  };
+  legend.label = APP.optionMethod('label', o, legend);
+  legend.key = APP.optionMethod('key', o, legend);
+  legend.color = APP.optionMethod('color', o, legend);
+  legend.selectedItem = APP.localMethod(selectedItem, legend);
+  legend.on = APP.eventListener(events, legend);
 
   legend.highlight = function(selection, d) {
     selection.call(highlight, d, 'mouseenter');

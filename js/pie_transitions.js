@@ -132,21 +132,9 @@ APP.pieTransition = function() {
     return methods;
   };
 
-  methods.arc = function(_) {
-    if (!arguments.length) {return o.arc;}
-    o.arc = _;
-    return methods;
-  };
-  methods.sort = function(_) {
-    if (!arguments.length) {return o.sort;}
-    o.sort = _;
-    return methods;
-  };
-  methods.offset = function(_) {
-    if (!arguments.length) {return o.offset;}
-    o.offset = _;
-    return methods;
-  };
+  methods.arc = APP.optionMethod('arc', o, methods);
+  methods.sort = APP.optionMethod('sort', o, methods);
+  methods.offset = APP.optionMethod('offset', o, methods);
 
   return methods;
 };

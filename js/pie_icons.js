@@ -73,26 +73,11 @@ APP.pieIcons = function() {
     icons.tween(transition, true);
   };
 
-  icons.iconPath = function(_) {
-    if (!arguments.length) {return o.iconPath;}
-    o.iconPath = _;
-    return icons;
-  };
-  icons.imageWidth = function(_) {
-    if (!arguments.length) {return o.imageWidth;}
-    o.imageWidth = _;
-    return icons;
-  };
-  icons.interpolate = function(_) {
-    if (!arguments.length) {return o.interpolate;}
-    o.interpolate = _;
-    return icons;
-  };
-  icons.container = function(_) {
-    if (!arguments.length) {return o.container;}
-    o.container = _;
-    return icons;
-  };
+  icons.iconPath = APP.optionMethod('iconPath', o, icons);
+  icons.imageWidth = APP.optionMethod('imageWidth', o, icons);
+  icons.radius = APP.optionMethod('radius', o, icons);
+  icons.interpolate = APP.optionMethod('interpolate', o, icons);
+  icons.container = APP.optionMethod('container', o, icons);
 
   return icons;
 };

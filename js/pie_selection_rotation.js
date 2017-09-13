@@ -59,7 +59,7 @@ APP.pieSelectionRotation = function() {
 
     if (typeof d === 'undefined' ) {
       returnArray = selection.nodes().map(nodeMap);
-      return selection._groups[0] instanceof NodeList ? returnArray : returnArray[0];
+      return APP.isList(selection) ? returnArray : returnArray[0];
     }
 
     selection.each(function() {
@@ -73,19 +73,11 @@ APP.pieSelectionRotation = function() {
     var returnArray = selection.nodes()
         .map(function(node) {return local.angle.get(node) || 0;});
 
-    return selection._groups[0] instanceof NodeList ? returnArray : returnArray[0];
+    return APP.isList(selection) ? returnArray : returnArray[0];
   };
 
-  rotation.key = function(_) {
-    if (!arguments.length) {return o.key;}
-    o.key = _;
-    return rotation;
-  };
-  rotation.alignmentAngle = function(_) {
-    if (!arguments.length) {return o.alignmentAngle;}
-    o.alignmentAngle = _;
-    return rotation;
-  };
+  rotation.key = APP.optionMethod('key', o, rotation);
+  rotation.alignmentAngle = APP.optionMethod('alignmentAngle', o, rotation);
 
   return rotation;
 };

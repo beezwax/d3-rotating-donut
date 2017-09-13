@@ -50,11 +50,7 @@ APP.rotatingDonut = function() {
 
     context = d3.select(this);
 
-    if (group instanceof d3.transition) {
-      t = d3.transition(group);
-    } else {
-      t = d3.transition().duration(o.animationDuration);
-    }
+    t = APP.reuseTransition(group, o.animationDuration);
 
     dim = getDimensions(context);
 
@@ -175,72 +171,19 @@ APP.rotatingDonut = function() {
     return donut;
   };
 
-  donut.animationDuration = function(_) {
-    if (!arguments.length) {return o.animationDuration;}
-    o.animationDuration = _;
-    return donut;
-  };
-  donut.iconSize = function(_) {
-    if (!arguments.length) {return o.iconSize;}
-    o.iconSize = _;
-    return donut;
-  };
-  donut.thickness = function(_) {
-    if (!arguments.length) {return o.thickness;}
-    o.thickness = _;
-    return donut;
-  };
-  donut.value = function(_) {
-    if (!arguments.length) {return o.value;}
-    o.value = _;
-    return donut;
-  };
-  donut.icon = function(_) {
-    if (!arguments.length) {return o.icon;}
-    o.icon = _;
-    return donut;
-  };
-  donut.color = function(_) {
-    if (!arguments.length) {return o.color;}
-    o.color = _;
-    return donut;
-  };
-  donut.key = function(_) {
-    if (!arguments.length) {return o.key;}
-    o.key = _;
-    return donut;
-  };
-  donut.sort = function(_) {
-    if (!arguments.length) {return o.sort;}
-    o.sort = _;
-    return donut;
-  };
+  donut.animationDuration = APP.optionMethod('animationDuration', o, donut);
+  donut.iconSize = APP.optionMethod('iconSize', o, donut);
+  donut.thickness = APP.optionMethod('thickness', o, donut);
+  donut.value = APP.optionMethod('value', o, donut);
+  donut.icon = APP.optionMethod('icon', o, donut);
+  donut.color = APP.optionMethod('color', o, donut);
+  donut.key = APP.optionMethod('key', o, donut);
+  donut.sort = APP.optionMethod('sort', o, donut);
 
-  donut.dimensions = function(context, _) {
-    var returnArray;
-    if (typeof _ === 'undefined' ) {
-      returnArray = context.nodes()
-          .map(function (node) {return local.dimensions.get(node);});
-      return context._groups[0] instanceof NodeList ? returnArray : returnArray[0];
-    }
-    context.each(function() {local.dimensions.set(this, _);});
-    return donut;
-  };
-  donut.label = function(context, _) {
-    var returnArray;
-    if (typeof _ === 'undefined' ) {
-      returnArray = context.nodes()
-          .map(function (node) {return local.label.get(node);});
-      return context._groups[0] instanceof NodeList ? returnArray : returnArray[0];
-    }
-    context.each(function() {local.label.set(this, _);});
-    return donut;
-  };
+  donut.dimensions = APP.localMethod(local.dimensions, donut);
+  donut.label = APP.localMethod(local.label, donut);
 
-  donut.on = function(evt, callback) {
-    events.on(evt, callback);
-    return donut;
-  };
+  donut.on = APP.eventListener(events, donut);
 
   return donut;
 };

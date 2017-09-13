@@ -33,16 +33,8 @@ APP.descriptionWithArrow = function() {
         .text(o.text);
   }
 
-  description.label = function(_) {
-    if (!arguments.length) {return o.label;}
-    o.label = _;
-    return description;
-  };
-  description.text = function(_) {
-    if (!arguments.length) {return o.text;}
-    o.text = _;
-    return description;
-  };
+  description.label = APP.optionMethod('label', o, description);
+  description.text = APP.optionMethod('text', o, description);
 
   return description;
 };
