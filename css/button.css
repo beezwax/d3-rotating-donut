@@ -10,7 +10,8 @@ button {
     user-select: none;
     cursor: pointer;
     position: absolute;
-    right: 16px;
+    left: 50%;
+    transform: translateX(-50%);
 }
 button:hover {
     background-color: #ddd;

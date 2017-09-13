@@ -39,6 +39,11 @@ path {
     font-weight: bold;
 }
 
+.descriptions {
+    width: 300px;
+    position: relative;
+}
+
 .slider {
     display: inline-block;
     height: 20px;

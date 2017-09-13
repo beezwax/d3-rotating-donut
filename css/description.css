@@ -1,0 +1,27 @@
+.description {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 40px;
+}
+.description .desc-left,
+.description .desc-right {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.description .arrows {
+    display: inline-block;
+    position: relative;
+}
+.description .arrow {
+    font-size: 24px;
+    line-height: 24px;
+    padding: 8px;
+}
+.description.no-data {
+    color: #bbb;
+}
+
+.description.no-data .arrow {
+    visibility: hidden;
+}

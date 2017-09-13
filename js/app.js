@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', function() {
   'use strict';
   var donut,
       legend,
+      description,
       events;
 
   function build() {
@@ -17,6 +18,10 @@ document.addEventListener('DOMContentLoaded', function() {
         .label(function(d) {return d.label;})
         .color(function(d) {return d.color;})
         .key(function(d) {return d.id;});
+
+    description = APP.descriptionWithArrow()
+        .label(function(d) {return formatDollar((d || {}).value);})
+        .text(function(d) {return d ? d.description : 'no data for selection';});
   }
 
   function addToDom() {
@@ -48,6 +53,20 @@ document.addEventListener('DOMContentLoaded', function() {
     d3.selectAll('.donut-size').on('change', events.resizeSliderChange);
   }
 
+  function setDescriptions() {
+    d3.select('#description1')
+        .datum(donut.selectedSegment(d3.select('#donut1')))
+        .call(description);
+
+    d3.select('#description2')
+        .datum(donut.selectedSegment(d3.select('#donut2')))
+        .call(description);
+  }
+
+  function formatDollar(num) {
+    return typeof num === 'number' ? '$' + num.toFixed(2) : '';
+  }
+
   events = {
     dataButtonClick: function() {
       d3.select('#donut1')
@@ -62,6 +81,8 @@ document.addEventListener('DOMContentLoaded', function() {
           .delay(400)
           .duration(200)
           .call(donut);
+
+      setDescriptions();
     },
 
     donutClick: function(d) {
@@ -75,6 +96,8 @@ document.addEventListener('DOMContentLoaded', function() {
       d3.select('#legend')
           .call(legend.selectedItem, d)
           .call(legend);
+
+      setDescriptions();
     },
 
     donutMouseEnter: function(d) {
@@ -91,6 +114,8 @@ document.addEventListener('DOMContentLoaded', function() {
       d3.selectAll('.donut')
           .call(donut.selectedSegment, d)
           .call(donut);
+
+      setDescriptions();
     },
 
     resizeSliderChange: function() {
@@ -103,7 +128,15 @@ document.addEventListener('DOMContentLoaded', function() {
           .transition()
           .duration(donut.animationDuration())
           .style('width', value + 'px')
-          .style('height', value + 'px');
+          .style('height', value + 'px')
+          .each(transitionDonutDescription);
+
+      function transitionDonutDescription() {
+        d3.select('.description[data-target="' + target + '"]')
+            .transition()
+            .duration(donut.animationDuration())
+            .style('height', value + 'px');
+      }
     }
   };
 
