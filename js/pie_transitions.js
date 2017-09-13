@@ -11,7 +11,8 @@ APP.pieTransition = function() {
 
   var o = {
     arc: null,
-    sort: null
+    sort: null,
+    offset: 0
   };
 
   var methods = {
@@ -112,8 +113,8 @@ APP.pieTransition = function() {
   function interpolate(segment) {
     var d = d3.select(segment).datum();
     var newData = {
-      startAngle: d.startAngle,
-      endAngle: d.endAngle,
+      startAngle: d.startAngle + o.offset,
+      endAngle: d.endAngle + o.offset,
       innerRadius: o.arc.innerRadius()(),
       outerRadius: o.arc.outerRadius()()
     };
@@ -140,6 +141,11 @@ APP.pieTransition = function() {
   methods.sort = function(_) {
     if (!arguments.length) {return o.sort;}
     o.sort = _;
+    return methods;
+  };
+  methods.offset = function(_) {
+    if (!arguments.length) {return o.offset;}
+    o.offset = _;
     return methods;
   };
 

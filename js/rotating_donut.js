@@ -3,7 +3,8 @@ APP.rotatingDonut = function() {
   'use strict';
   var o,
       events,
-      local;
+      local,
+      rotation;
 
   o = {
     animationDuration: 600,
@@ -14,13 +15,16 @@ APP.rotatingDonut = function() {
     sort: null
   };
 
-  events = d3.dispatch('mouseenter', 'mouseleave');
+  events = d3.dispatch('mouseenter', 'mouseleave', 'click');
 
   local = {
     label: d3.local(),
     animate: d3.local(),
     dimensions: d3.local()
   };
+
+  rotation = APP.pieSelectionRotation()
+      .key(function(d) {return o.key(d);});
 
   function donut(group) {
     group.each(function(data) {
@@ -62,6 +66,7 @@ APP.rotatingDonut = function() {
 
     context.selectAll('svg')
         .data([pie(data.sort(o.sort))])
+        .call(rotation)
         .enter()
         .append('svg')
         .append('g')
@@ -90,13 +95,14 @@ APP.rotatingDonut = function() {
         .append('path')
         .attr('class', 'segment')
         .attr('fill', dataAccess('color'))
-        .on('mouseenter mouseleave', onPathEvent(context));
+        .on('mouseenter mouseleave click', onPathEvent(context));
 
     pieTransition
         .arc(arc)
         .sort(o.sort)
         .enteringSegments(segmentEnter)
-        .transitioningSegments(segments);
+        .transitioningSegments(segments)
+        .offset(rotation.getAngle(context.select('svg')));
 
     segmentEnter
         .transition(t)
@@ -114,6 +120,10 @@ APP.rotatingDonut = function() {
 
   function onPathEvent(context) {
     return function(d) {
+      if (d3.event.type === 'click') {
+        rotation.selectedSegment(context.select('svg'), d.data);
+        context.call(donut);
+      }
       events.call(d3.event.type, context.node(), d.data);
     };
   }
@@ -138,6 +148,17 @@ APP.rotatingDonut = function() {
       innerRadius: innerRadius
     };
   }
+
+  donut.selectedSegment = function(context, d) {
+    if (typeof d === 'undefined' ) {return rotation.selectedSegment(context.select('svg'));}
+    rotation.selectedSegment(context.select('svg'), d);
+    return donut;
+  };
+  donut.alignmentAngle = function(_) {
+    if (typeof _ === 'undefined' ) {return rotation.alignmentAngle();}
+    rotation.alignmentAngle(_);
+    return donut;
+  };
 
   donut.animationDuration = function(_) {
     if (!arguments.length) {return o.animationDuration;}

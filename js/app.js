@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   function build() {
     donut = APP.rotatingDonut()
+        .alignmentAngle(90)
         .thickness(0.5)
         .value(function(d) {return d.value;})
         .color(function(d) {return d.color;})
@@ -39,8 +40,10 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function addListeners() {
-    donut.on('mouseenter', events.donutMouseEnter)
+    donut.on('click', events.donutClick)
+        .on('mouseenter', events.donutMouseEnter)
         .on('mouseleave', events.donutMouseLeave);
+    legend.on('click', events.legendClick);
     d3.select('button').on('click', events.dataButtonClick);
     d3.selectAll('.donut-size').on('change', events.resizeSliderChange);
   }
@@ -61,6 +64,19 @@ document.addEventListener('DOMContentLoaded', function() {
           .call(donut);
     },
 
+    donutClick: function(d) {
+      var container = this;
+
+      d3.selectAll('.donut')
+          .filter(function() {return this !== container;})
+          .call(donut.selectedSegment, d)
+          .call(donut);
+
+      d3.select('#legend')
+          .call(legend.selectedItem, d)
+          .call(legend);
+    },
+
     donutMouseEnter: function(d) {
       d3.select('#legend')
           .call(legend.highlight, d)
@@ -69,6 +85,12 @@ document.addEventListener('DOMContentLoaded', function() {
     donutMouseLeave: function(d) {
       d3.select('#legend')
           .call(legend.unhighlight, d)
+    },
+
+    legendClick: function(d) {
+      d3.selectAll('.donut')
+          .call(donut.selectedSegment, d)
+          .call(donut);
     },
 
     resizeSliderChange: function() {
