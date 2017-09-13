@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
         .datum(APP.generateData())
         .call(donut.label, 'Smith')
         .transition()
-        .duration(0)
+        .duration(0) // don't animate the initial load
         .call(donut);
 
     d3.select('#donut2')
@@ -71,6 +71,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
   events = {
     dataButtonClick: function() {
+      // bind new data to selections and call donut to re-render
+      // the donut module can be passed a transition rather than a selection
+      // and will use that transition instead of creating a new transition
       d3.select('#donut1')
           .datum(APP.generateData(true))
           .transition()
@@ -90,11 +93,13 @@ document.addEventListener('DOMContentLoaded', function() {
     donutClick: function(d) {
       var container = this;
 
+      // select segment on all the other donuts
       d3.selectAll('.donut')
           .filter(function() {return this !== container;})
           .call(donut.selectedSegment, d)
           .call(donut);
 
+      // select item on legend
       d3.select('#legend')
           .call(legend.selectedItem, d)
           .call(legend);
@@ -113,6 +118,7 @@ document.addEventListener('DOMContentLoaded', function() {
     },
 
     legendClick: function(d) {
+      // select segment on all donuts
       d3.selectAll('.donut')
           .call(donut.selectedSegment, d)
           .call(donut);

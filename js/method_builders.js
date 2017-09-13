@@ -18,6 +18,7 @@ APP.localMethod = function(local, component) {
 
   return function(context, _) {
     var returnArray;
+    // if there's do data passed, then we'll return the current selection instead of setting it.
     if (typeof _ === 'undefined' ) {
       returnArray = context.nodes().map(getLocalValue);
       return APP.isList(context) ? returnArray : returnArray[0];

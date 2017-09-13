@@ -16,6 +16,7 @@ APP.pieSelectionRotation = function() {
     group.each(function() {
       var selectedData = getSelectedData(this);
 
+      // find the new angle if the selectedSegment is in the data set
       local.angle.set(this, local.angle.get(this) || 0);
       local.selectedSegment.set(this, selectedData);
 
@@ -26,6 +27,8 @@ APP.pieSelectionRotation = function() {
   }
 
   function newAngle(offsetAngle, currentAngle) {
+    // we need to consider the rotation from the previous angle, not just the offset from zero.
+    // however, we want to cancel that out before we return the offset
     var radiansToTurn = degreesToRadians(o.alignmentAngle) - currentAngle - offsetAngle;
     return shorterRotation(radiansToTurn) + offsetAngle;
   }
@@ -38,6 +41,8 @@ APP.pieSelectionRotation = function() {
     return degrees * Math.PI * 2 / 360;
   }
 
+  // if the distance the donut has to travel is more than half a turn,
+  // then rotate the other way instead
   function shorterRotation(offset) {
     var tau = Math.PI * 2;
     offset = offset % tau;
@@ -56,7 +61,7 @@ APP.pieSelectionRotation = function() {
     function nodeMap(node) {
       return (local.selectedSegment.get(node) || {}).data;
     }
-
+    // if there's do data passed, then we'll return the current selection instead of setting it.
     if (typeof d === 'undefined' ) {
       returnArray = selection.nodes().map(nodeMap);
       return APP.isList(selection) ? returnArray : returnArray[0];

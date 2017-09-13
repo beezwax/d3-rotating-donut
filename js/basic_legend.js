@@ -1,6 +1,7 @@
 if(typeof APP === 'undefined') {APP = {};}
 APP.basicLegend = function () {
   'use strict';
+  // scope available to public methods
   var events = d3.dispatch('mouseenter', 'mouseleave', 'click'),
       selectedItem = d3.local();
 
@@ -11,12 +12,14 @@ APP.basicLegend = function () {
   };
 
   function legend(group) {
+    // scope which isn't selection-specific
     group.each(function(data) {
       render.call(this, data, group)
     });
   }
 
   function render(data, group) {
+    // selection-specific scope
     var context = d3.select(this),
         t,
         labels,
@@ -31,11 +34,14 @@ APP.basicLegend = function () {
         .append('ul')
         .attr('class', 'legend');
 
+    // bind new data to label selection
+    // Object is shortcut function to return argument as an object
     labels = context
-        .selectAll('ul')
+        .selectAll('ul') // sets parent for selection where elements will be added
         .selectAll('li.legend-label')
         .data(Object, o.key);
 
+    // add new labels which weren't in previous data set
     labelsEnter = labels.enter()
         .append('li')
         .attr('class', 'legend-label')
@@ -67,6 +73,7 @@ APP.basicLegend = function () {
         .style('opacity', 1)
         .style('left', '12px');
 
+    // remove labels which aren't in new data set
     labels.exit()
         .transition(t)
         .call(labelInitialAttributes)
@@ -103,6 +110,7 @@ APP.basicLegend = function () {
     return selectedItem.get(this) && o.key(d) === o.key(selectedItem.get(this));
   }
 
+  // value accessor functions
   legend.label = APP.optionMethod('label', o, legend);
   legend.key = APP.optionMethod('key', o, legend);
   legend.color = APP.optionMethod('color', o, legend);

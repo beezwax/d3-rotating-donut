@@ -28,6 +28,7 @@ APP.pieTransition = function() {
           .call(render);
     },
     interpolate: function (segment) {
+      // grabbing the data this way is easier that trying to pass it in at every call
       var d = d3.select(segment).datum();
       var newData = {
         startAngle: d.startAngle + o.offset,
@@ -39,6 +40,7 @@ APP.pieTransition = function() {
     }
   };
 
+  // finds the endAngle (either current or previous) of the arc next to the node
   function previousAdjacentAngle(node) {
     var index = allNodes.indexOf(node);
     if (index) {
@@ -88,6 +90,8 @@ APP.pieTransition = function() {
     return d3.select(node).datum();
   }
 
+  // for enter segments, we want to get the previous endAngle of the adjacent arc
+  // and animate in from there
   function setEnterAngle() {
     var enterAngle = previousAdjacentAngle(this);
     previousSegmentData.set(this, {
@@ -98,6 +102,9 @@ APP.pieTransition = function() {
     });
   }
 
+  // for exit segments, we have to find the adjacent segment
+  // and transition to the angle where that one is going to be.
+  // This way, the arc will shrink to nothing in the appropriate place.
   function setExitAngle(d) {
     var exitAngle = currentAdjacentAngle(this);
     d.startAngle = exitAngle;
@@ -108,6 +115,9 @@ APP.pieTransition = function() {
     transition.attrTween('d', arcTween);
   }
 
+  // returns a function which accepts t(0-1) and returns a "d" attribute for a path
+  // currentSegment keeps the currentSegment up-to-date as the transition changes
+  // so if the tranistion is cancelled (by new data) then it will animate smoothly
   function arcTween() {
     var i = methods.interpolate(this);
     previousSegmentData.set(this, i(0));
