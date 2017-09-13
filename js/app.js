@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
   'use strict';
   var donut,
+      legend,
       events;
 
   function build() {
@@ -10,6 +11,11 @@ document.addEventListener('DOMContentLoaded', function() {
         .color(function(d) {return d.color;})
         .key(function(d) {return d.id;})
         .sort(function(a, b) {return a.id - b.id;});
+
+    legend = APP.basicLegend()
+        .label(function(d) {return d.label;})
+        .color(function(d) {return d.color;})
+        .key(function(d) {return d.id;});
   }
 
   function addToDom() {
@@ -26,9 +32,15 @@ document.addEventListener('DOMContentLoaded', function() {
         .transition()
         .duration(0)
         .call(donut);
+
+    d3.select('#legend')
+        .datum(APP.generateData())
+        .call(legend);
   }
 
   function addListeners() {
+    donut.on('mouseenter', events.donutMouseEnter)
+        .on('mouseleave', events.donutMouseLeave);
     d3.select('button').on('click', events.dataButtonClick);
     d3.selectAll('.donut-size').on('change', events.resizeSliderChange);
   }
@@ -47,6 +59,16 @@ document.addEventListener('DOMContentLoaded', function() {
           .delay(400)
           .duration(200)
           .call(donut);
+    },
+
+    donutMouseEnter: function(d) {
+      d3.select('#legend')
+          .call(legend.highlight, d)
+    },
+
+    donutMouseLeave: function(d) {
+      d3.select('#legend')
+          .call(legend.unhighlight, d)
     },
 
     resizeSliderChange: function() {

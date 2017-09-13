@@ -1,7 +1,8 @@
 if(typeof APP === 'undefined') {APP = {};}
 APP.generateData = function(splice) {
   'use strict';
-  var colors = d3.scaleOrdinal(d3.schemeCategory10),
+  var labels = ['travel', 'electricity', 'phone', 'shopping', 'food'],
+      colors = d3.scaleOrdinal(d3.schemeCategory10),
       arr = [],
       i;
 
@@ -9,7 +10,8 @@ APP.generateData = function(splice) {
     arr.push({
       id: i,
       value: 5 + Math.random() * 15,
-      color: colors(i)
+      color: colors(i),
+      label: labels[i - 1]
     });
   }
   if (splice) {

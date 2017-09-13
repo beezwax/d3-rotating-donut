@@ -5,6 +5,9 @@ body {
     height: 600px;
     margin: 8px;
 }
+path {
+    cursor: pointer;
+}
 .donuts {
     display: inline-block;
     position: relative;
@@ -19,13 +22,19 @@ body {
 }
 #donut1 {
     width: 200px;
-    height: 200px;
 }
 #donut2 {
     width: 300px;
     height: 300px;
 }
-
+#donut1,
+#description1 {
+    height: 200px;
+}
+#donut2,
+#description2 {
+    height: 300px;
+}
 .donut-label {
     font-weight: bold;
 }

@@ -1,0 +1,35 @@
+#legend {
+    position: relative;
+    margin-top: 20px;
+    width: 140px;
+}
+
+#legend li.legend-label {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    padding: 2px 8px;
+    width: calc(100% - 20px);
+    cursor: pointer;
+}
+
+#legend li.legend-label svg {
+    margin-right: 8px;
+}
+
+#legend .hovered {
+    stroke: black;
+    z-index: 1;
+}
+
+#legend rect.hovered {
+    stroke-width: 2px;
+}
+
+#legend li.hovered,
+#legend li.selected {
+    background-color: #e2e8ff;
+}
+#legend li.hovered svg rect {
+    stroke-width: 1px;
+}

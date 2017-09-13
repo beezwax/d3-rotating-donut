@@ -2,6 +2,7 @@ if(typeof APP === 'undefined') {APP = {};}
 APP.rotatingDonut = function() {
   'use strict';
   var o,
+      events,
       local;
 
   o = {
@@ -12,6 +13,8 @@ APP.rotatingDonut = function() {
     key: null,
     sort: null
   };
+
+  events = d3.dispatch('mouseenter', 'mouseleave');
 
   local = {
     label: d3.local(),
@@ -86,7 +89,8 @@ APP.rotatingDonut = function() {
     segmentEnter = segments.enter()
         .append('path')
         .attr('class', 'segment')
-        .attr('fill', dataAccess('color'));
+        .attr('fill', dataAccess('color'))
+        .on('mouseenter mouseleave', onPathEvent(context));
 
     pieTransition
         .arc(arc)
@@ -106,6 +110,12 @@ APP.rotatingDonut = function() {
         .transition(t)
         .call(pieTransition.exit)
         .remove();
+  }
+
+  function onPathEvent(context) {
+    return function(d) {
+      events.call(d3.event.type, context.node(), d.data);
+    };
   }
 
   function dataAccess(key) {
@@ -178,6 +188,11 @@ APP.rotatingDonut = function() {
       return context._groups[0] instanceof NodeList ? returnArray : returnArray[0];
     }
     context.each(function() {local.label.set(this, _);});
+    return donut;
+  };
+
+  donut.on = function(evt, callback) {
+    events.on(evt, callback);
     return donut;
   };
 
