@@ -6,8 +6,13 @@
   "dependencies": {
     "d3": "^4.10.0"
   },
+  "devDependencies": {
+    "chai": "^4.1.0",
+    "mocha": "^3.5.0",
+    "mocha-phantomjs-core": "^2.1.2"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "phantomjs ./node_modules/mocha-phantomjs-core/mocha-phantomjs-core.js ./tests/mocha_runner.html"
   },
   "repository": {
     "type": "git",
