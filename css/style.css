@@ -8,6 +8,9 @@ body {
 path {
     cursor: pointer;
 }
+image {
+    pointer-events: none;
+}
 .donuts {
     display: inline-block;
     position: relative;

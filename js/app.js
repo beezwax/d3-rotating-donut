@@ -8,8 +8,10 @@ document.addEventListener('DOMContentLoaded', function() {
   function build() {
     donut = APP.rotatingDonut()
         .alignmentAngle(90)
+        .iconSize(0.5)
         .thickness(0.5)
         .value(function(d) {return d.value;})
+        .icon(function(d) {return d.icon;})
         .color(function(d) {return d.color;})
         .key(function(d) {return d.id;})
         .sort(function(a, b) {return a.id - b.id;});

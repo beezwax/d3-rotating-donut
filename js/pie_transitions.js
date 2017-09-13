@@ -26,6 +26,16 @@ APP.pieTransition = function() {
       transition
           .each(setExitAngle)
           .call(render);
+    },
+    interpolate: function (segment) {
+      var d = d3.select(segment).datum();
+      var newData = {
+        startAngle: d.startAngle + o.offset,
+        endAngle: d.endAngle + o.offset,
+        innerRadius: o.arc.innerRadius()(),
+        outerRadius: o.arc.outerRadius()()
+      };
+      return d3.interpolate(previousSegmentData.get(segment), newData);
     }
   };
 
@@ -99,7 +109,7 @@ APP.pieTransition = function() {
   }
 
   function arcTween() {
-    var i = interpolate(this);
+    var i = methods.interpolate(this);
     previousSegmentData.set(this, i(0));
     return function(t) {
       var interation = i(t);
@@ -108,17 +118,6 @@ APP.pieTransition = function() {
           .outerRadius(interation.outerRadius);
       return o.arc(interation);
     };
-  }
-
-  function interpolate(segment) {
-    var d = d3.select(segment).datum();
-    var newData = {
-      startAngle: d.startAngle + o.offset,
-      endAngle: d.endAngle + o.offset,
-      innerRadius: o.arc.innerRadius()(),
-      outerRadius: o.arc.outerRadius()()
-    };
-    return d3.interpolate(previousSegmentData.get(segment), newData);
   }
 
   methods.enteringSegments = function (_) {

@@ -1,7 +1,9 @@
 if(typeof APP === 'undefined') {APP = {};}
 APP.generateData = function(splice) {
   'use strict';
-  var labels = ['travel', 'electricity', 'phone', 'shopping', 'food'],
+  // Icons from Freepik at http://www.flaticon.com/packs/miscellaneous-elements
+  var icons = ['car.svg', 'idea.svg', 'phone-call.svg', 'shopping-cart.svg', 'cutlery.svg'],
+      labels = ['travel', 'electricity', 'phone', 'shopping', 'food'],
       descriptions = [
         'Including car payments, fuel, tolls', 'Electric Bill',
         'Cell phone, cell plan, land-line',
@@ -17,6 +19,7 @@ APP.generateData = function(splice) {
       id: i,
       value: 5 + Math.random() * 15,
       color: colors(i),
+      icon: 'images/' + icons[i - 1],
       label: labels[i - 1],
       description: descriptions[i - 1]
     });

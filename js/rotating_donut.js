@@ -8,8 +8,10 @@ APP.rotatingDonut = function() {
 
   o = {
     animationDuration: 600,
+    iconSize: 0.7,
     thickness: 0.4,
     value: null,
+    icon: null,
     color: null,
     key: null,
     sort: null
@@ -20,6 +22,7 @@ APP.rotatingDonut = function() {
   local = {
     label: d3.local(),
     animate: d3.local(),
+    icons: d3.local(),
     dimensions: d3.local()
   };
 
@@ -39,6 +42,7 @@ APP.rotatingDonut = function() {
         pie,
         arc,
         pieTransition,
+        pieIcons,
         segments,
         segmentEnter;
 
@@ -63,6 +67,13 @@ APP.rotatingDonut = function() {
         .innerRadius(dim.innerRadius);
 
     pieTransition = local.animate.get(this) || local.animate.set(this, APP.pieTransition());
+    pieIcons = local.icons.get(this) || local.icons.set(this, APP.pieIcons());
+
+    pieIcons
+        .container(function() {return context.select('g.group');})
+        .iconPath(dataAccess('icon'))
+        .imageWidth(dim.outerRadius * o.thickness * o.iconSize)
+        .interpolate(pieTransition.interpolate);
 
     context.selectAll('svg')
         .data([pie(data.sort(o.sort))])
@@ -105,16 +116,20 @@ APP.rotatingDonut = function() {
         .offset(rotation.getAngle(context.select('svg')));
 
     segmentEnter
+        .call(pieIcons)
         .transition(t)
-        .call(pieTransition.enter);
+        .call(pieTransition.enter)
+        .call(pieIcons.tween);
 
     segments
         .transition(t)
-        .call(pieTransition.transition);
+        .call(pieTransition.transition)
+        .call(pieIcons.tween);
 
     segments.exit()
         .transition(t)
         .call(pieTransition.exit)
+        .call(pieIcons.exitTween)
         .remove();
   }
 
@@ -165,6 +180,11 @@ APP.rotatingDonut = function() {
     o.animationDuration = _;
     return donut;
   };
+  donut.iconSize = function(_) {
+    if (!arguments.length) {return o.iconSize;}
+    o.iconSize = _;
+    return donut;
+  };
   donut.thickness = function(_) {
     if (!arguments.length) {return o.thickness;}
     o.thickness = _;
@@ -173,6 +193,11 @@ APP.rotatingDonut = function() {
   donut.value = function(_) {
     if (!arguments.length) {return o.value;}
     o.value = _;
+    return donut;
+  };
+  donut.icon = function(_) {
+    if (!arguments.length) {return o.icon;}
+    o.icon = _;
     return donut;
   };
   donut.color = function(_) {
